@@ -16,7 +16,8 @@
   --success-soft: #e3f6eb;
   --warn: #a15c07;
   --warn-soft: #fff3dc;
-  --shadow: 0 16px 38px rgba(30, 48, 42, 0.08);
+  --code: #12241f;
+  --shadow: 0 14px 36px rgba(30, 48, 42, 0.08);
   font-family:
     "Microsoft YaHei",
     "PingFang SC",
@@ -131,7 +132,7 @@ h1 {
 
 .stats-strip {
   display: grid;
-  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  grid-template-columns: repeat(6, minmax(110px, 1fr));
   gap: 10px;
   margin-bottom: 18px;
 }
@@ -175,8 +176,61 @@ h1 {
 
 .side-panel {
   position: sticky;
-  top: 110px;
+  top: 122px;
   padding: 16px;
+}
+
+.practice-summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.practice-summary strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 22px;
+}
+
+.summary-score {
+  color: var(--success);
+  background: var(--success-soft);
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.progress-bar.compact {
+  height: 7px;
+  margin: 10px 0 14px;
+}
+
+.feedback-mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 4px;
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel-soft);
+}
+
+.mode-choice {
+  padding: 8px 6px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.mode-choice.active {
+  color: #fff;
+  background: var(--brand);
 }
 
 .side-title {
@@ -251,8 +305,19 @@ h1 {
   border-color: #f1aea7;
 }
 
+.nav-dot.partial {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-color: #f0c36e;
+}
+
+.nav-dot.active {
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.16);
+}
+
 .question-card {
-  padding: 22px;
+  padding: 24px 26px;
+  min-height: 560px;
 }
 
 .question-head {
@@ -292,6 +357,10 @@ h1 {
   font-size: 18px;
   line-height: 1.75;
   white-space: pre-wrap;
+}
+
+.question-stem::first-line {
+  font-weight: 700;
 }
 
 .options {
@@ -371,6 +440,16 @@ h1 {
   margin-top: 18px;
 }
 
+.action-spacer {
+  flex: 1 1 20px;
+}
+
+.answer-hint {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .primary-button {
   background: var(--brand);
   color: #fff;
@@ -399,7 +478,7 @@ h1 {
 .feedback {
   margin-top: 18px;
   border-radius: 8px;
-  padding: 14px;
+  padding: 16px;
   border: 1px solid var(--line);
   background: var(--panel-soft);
 }
@@ -429,6 +508,126 @@ h1 {
   line-height: 1.7;
 }
 
+.answer-text {
+  margin-top: 4px;
+}
+
+.explanation {
+  margin-top: 10px;
+  padding: 11px 12px;
+  border-left: 3px solid var(--brand);
+  background: rgba(255, 255, 255, 0.58);
+  line-height: 1.7;
+}
+
+.solution-assets {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.solution-origin {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.solution-origin span {
+  padding: 4px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--brand-dark);
+  font-weight: 800;
+}
+
+.answer-diagram {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.answer-diagram img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.answer-diagram figcaption {
+  padding: 9px 12px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.code-answer {
+  overflow: hidden;
+  border: 1px solid #263c35;
+  border-radius: 10px;
+  background: var(--code);
+  color: #e7f5f0;
+}
+
+.code-toolbar {
+  min-height: 44px;
+  padding: 8px 10px 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cce5dc;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.code-toolbar small {
+  margin-left: 6px;
+  color: #83b7a6;
+  font-weight: 600;
+}
+
+.code-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: #42c79b;
+  box-shadow: 14px 0 #e6b94b, 28px 0 #e8786e;
+}
+
+.copy-button {
+  padding: 6px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f0faf7;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.copy-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.code-answer pre {
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  tab-size: 4;
+}
+
+.code-answer code {
+  font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
 .exam-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
@@ -438,8 +637,10 @@ h1 {
 
 .exam-toolbar {
   position: sticky;
-  top: 110px;
+  top: 122px;
   padding: 16px;
+  max-height: calc(100vh - 142px);
+  overflow: auto;
 }
 
 .exam-toolbar h2,
@@ -470,6 +671,34 @@ h1 {
   background: var(--brand);
 }
 
+.exam-navigator {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  max-height: 230px;
+  margin: 14px 0;
+  padding-right: 2px;
+  overflow: auto;
+}
+
+.exam-dot {
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.exam-dot.answered {
+  border-color: #78c6b7;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-weight: 800;
+}
+
 .exam-list {
   display: grid;
   gap: 14px;
@@ -478,6 +707,7 @@ h1 {
 .exam-question {
   padding: 18px;
   box-shadow: none;
+  scroll-margin-top: 124px;
 }
 
 .exam-question .question-stem {
@@ -580,7 +810,7 @@ h1 {
   }
 
   .stats-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -609,5 +839,21 @@ h1 {
   .question-card,
   .exam-question {
     padding: 16px;
+  }
+
+  .action-spacer {
+    display: none;
+  }
+
+  .stats-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .answer-diagram {
+    overflow-x: auto;
+  }
+
+  .answer-diagram img {
+    min-width: 720px;
   }
 }

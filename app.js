@@ -1,6 +1,6 @@
 const BANK = window.QUESTION_BANK;
 const QUESTIONS = BANK.questions;
-const STORAGE_KEY = "ds-final-exam-system-v1";
+const STORAGE_KEY = "ds-final-exam-system-v4";
 
 const TYPE_ORDER = ["全部", "选择题", "填空题", "判断题", "简答题", "算法设计题"];
 
@@ -10,8 +10,9 @@ const defaultState = {
   practiceIndex: 0,
   practiceAnswers: {},
   practiceResults: {},
-  examSize: "全部",
-  examIds: QUESTIONS.map((q) => q.id),
+  feedbackMode: "instant",
+  examSize: "30题",
+  examIds: QUESTIONS.slice(0, 30).map((q) => q.id),
   examAnswers: {},
   examSubmitted: false,
   showOnlyWrong: true,
@@ -44,6 +45,39 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+async function copyText(value, fallbackElement) {
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return "copied";
+    } catch {
+      // Fall through to the compatibility path below.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (copied) return "copied";
+
+  if (fallbackElement) {
+    const range = document.createRange();
+    range.selectNodeContents(fallbackElement);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    return "selected";
+  }
+  return "failed";
 }
 
 function normalize(value) {
@@ -210,7 +244,7 @@ function headerMarkup() {
         <div>
           <div class="eyebrow">数据结构与算法</div>
           <h1>期末练习考试系统</h1>
-          <p class="subtitle">题目来自两份综合练习 PDF，答案按教材第 3 版课后习题答案校对匹配。</p>
+          <p class="subtitle">题目来自两份综合练习 PDF 与截图补充题，答案按教材第 3 版课后习题答案逐题校对。</p>
         </div>
         <nav class="mode-tabs" aria-label="模式切换">
           <button class="tab-button ${state.mode === "practice" ? "active" : ""}" data-mode="practice">练习模式</button>
@@ -222,8 +256,27 @@ function headerMarkup() {
 }
 
 function filterPanelMarkup(list, activeQuestion) {
+  const answered = list.filter((question) => hasAnswer(question, answerFor(question))).length;
+  const correct = list.filter((question) => state.practiceResults[question.id]?.status === "correct").length;
+  const percent = list.length ? Math.round((answered / list.length) * 100) : 0;
   return `
     <aside class="side-panel">
+      <div class="practice-summary">
+        <div>
+          <span class="small-muted">当前题型进度</span>
+          <strong>${answered} / ${list.length}</strong>
+        </div>
+        <span class="summary-score">答对 ${correct}</span>
+      </div>
+      <div class="progress-bar compact" style="--value:${percent}%"><span></span></div>
+      <div class="feedback-mode" aria-label="练习判题方式">
+        <button class="mode-choice ${state.feedbackMode === "instant" ? "active" : ""}" data-feedback-mode="instant">
+          即时反馈
+        </button>
+        <button class="mode-choice ${state.feedbackMode === "manual" ? "active" : ""}" data-feedback-mode="manual">
+          手动提交
+        </button>
+      </div>
       <div class="side-title">
         <span>题型导航</span>
         <span class="small-muted">${list.length} 题</span>
@@ -243,7 +296,8 @@ function filterPanelMarkup(list, activeQuestion) {
         ${list
           .map((question, index) => {
             const result = state.practiceResults[question.id];
-            const statusClass = result?.status === "correct" ? "correct" : result ? "wrong" : "";
+            const statusClass =
+              result?.status === "correct" ? "correct" : result?.status === "partial" ? "partial" : result ? "wrong" : "";
             return `<button class="nav-dot ${activeQuestion?.id === question.id ? "active" : ""} ${statusClass}" data-practice-index="${index}">${index + 1}</button>`;
           })
           .join("")}
@@ -256,11 +310,14 @@ function filterPanelMarkup(list, activeQuestion) {
 }
 
 function questionMetaMarkup(question, index, total) {
+  const sourceNumber = String(question.number).startsWith("补")
+    ? "截图补充题"
+    : `原卷第 ${question.number} 题`;
   return `
     <div class="question-head">
       <div class="question-meta">
         <span class="tag strong">${question.typeName}</span>
-        <span class="tag">原卷第 ${question.number} 题</span>
+        <span class="tag">${sourceNumber}</span>
         <span class="tag">${index + 1} / ${total}</span>
       </div>
       <span class="small-muted">${escapeHtml(question.source)}</span>
@@ -327,9 +384,47 @@ function feedbackMarkup(question, result, userAnswer) {
     <div class="feedback ${result.status}">
       <div class="feedback-title">${escapeHtml(result.message)}</div>
       <div class="reference"><strong>你的答案：</strong>${escapeHtml(answerLine)}</div>
-      <div class="reference"><strong>参考答案：</strong>${escapeHtml(question.referenceAnswer)}</div>
+      <div class="reference answer-text"><strong>参考答案：</strong>${escapeHtml(question.referenceAnswer)}</div>
+      ${question.explanation ? `<div class="explanation"><strong>解析：</strong>${escapeHtml(question.explanation)}</div>` : ""}
       ${rubricMarkup(result)}
+      ${richSolutionMarkup(question)}
       <div class="small-muted" style="margin-top: 8px;">${escapeHtml(question.answerSource || "")}</div>
+    </div>
+  `;
+}
+
+function richSolutionMarkup(question) {
+  if (!question.diagram && !question.code) return "";
+  return `
+    <div class="solution-assets">
+      ${
+        question.solutionOrigin
+          ? `<div class="solution-origin"><span>答案依据</span>${escapeHtml(question.solutionOrigin)}</div>`
+          : ""
+      }
+      ${
+        question.diagram
+          ? `
+            <figure class="answer-diagram">
+              <img src="${escapeHtml(question.diagram)}" alt="${escapeHtml(question.diagramAlt || "答案示意图")}" loading="lazy">
+              <figcaption>${escapeHtml(question.diagramAlt || "答案示意图")}</figcaption>
+            </figure>
+          `
+          : ""
+      }
+      ${
+        question.code
+          ? `
+            <section class="code-answer">
+              <div class="code-toolbar">
+                <div><span class="code-dot"></span>参考代码 <small>${escapeHtml(question.codeLanguage || "text")}</small></div>
+                <button class="copy-button" type="button" data-copy-code="${question.id}">复制代码</button>
+              </div>
+              <pre><code id="code-${question.id}">${escapeHtml(question.code)}</code></pre>
+            </section>
+          `
+          : ""
+      }
     </div>
   `;
 }
@@ -359,11 +454,17 @@ function practiceMarkup() {
         ${questionMetaMarkup(question, state.practiceIndex, list.length)}
         <p class="question-stem">${escapeHtml(question.stem)}</p>
         ${answerControlMarkup(question, value, "practice")}
+        <div class="answer-hint">
+          ${state.feedbackMode === "instant" && (question.type === "choice" || question.type === "judge")
+            ? "选择后立即判题；也可随时查看完整答案。"
+            : "完成后提交本题，系统会显示解析、代码或答案图。"}
+        </div>
         <div class="actions">
           <button class="primary-button" data-action="check-practice">提交本题</button>
           <button class="secondary-button" data-action="show-answer">查看答案</button>
-          <button class="ghost-button" data-action="prev-practice">上一题</button>
-          <button class="ghost-button" data-action="next-practice">下一题</button>
+          <span class="action-spacer"></span>
+          <button class="ghost-button" data-action="prev-practice">← 上一题</button>
+          <button class="ghost-button" data-action="next-practice">下一题 →</button>
           <button class="ghost-button" data-action="reset-practice-one">重做本题</button>
         </div>
         ${feedbackMarkup(question, result, value)}
@@ -389,6 +490,14 @@ function examToolbarMarkup(result) {
       </div>
       <div class="small-muted">答题进度：${answered} / ${total}</div>
       <div class="progress-bar" style="--value:${percent}%"><span></span></div>
+      <div class="exam-navigator" aria-label="试卷题号导航">
+        ${examQuestions()
+          .map((question, index) => {
+            const answeredClass = hasAnswer(question, answerFor(question, "exam")) ? "answered" : "";
+            return `<button class="exam-dot ${answeredClass}" data-exam-jump="${question.id}">${index + 1}</button>`;
+          })
+          .join("")}
+      </div>
       <div class="actions">
         <button class="primary-button" data-action="submit-exam">交卷评分</button>
         <button class="secondary-button" data-action="reset-exam">重置试卷</button>
@@ -412,9 +521,12 @@ function examToolbarMarkup(result) {
 
 function examQuestionMarkup(question, index, total) {
   const value = answerFor(question, "exam");
+  const sourceNumber = String(question.number).startsWith("补")
+    ? "截图补充题"
+    : `原卷第 ${question.number} 题`;
   return `
-    <article class="exam-question">
-      <div class="exam-question-number">第 ${index + 1} 题 / ${total} · ${question.typeName} · 原卷第 ${question.number} 题</div>
+    <article class="exam-question" id="exam-${question.id}">
+      <div class="exam-question-number">第 ${index + 1} 题 / ${total} · ${question.typeName} · ${sourceNumber}</div>
       <p class="question-stem">${escapeHtml(question.stem)}</p>
       ${answerControlMarkup(question, value, "exam")}
     </article>
@@ -456,6 +568,7 @@ function detailItemMarkup(item) {
       <div class="reference"><strong>你的答案：</strong>${escapeHtml(displayAnswer(question, userAnswer))}</div>
       <div class="reference"><strong>参考答案：</strong>${escapeHtml(question.referenceAnswer)}</div>
       ${rubricMarkup(grade)}
+      ${richSolutionMarkup(question)}
     </div>
   `;
 }
@@ -510,6 +623,13 @@ function bindEvents() {
     });
   });
 
+  document.querySelectorAll("[data-feedback-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.feedbackMode = button.dataset.feedbackMode;
+      render();
+    });
+  });
+
   document.querySelectorAll("[data-practice-index]").forEach((button) => {
     button.addEventListener("click", () => {
       state.practiceIndex = Number(button.dataset.practiceIndex);
@@ -520,10 +640,26 @@ function bindEvents() {
   document.querySelectorAll("[data-practice-answer]").forEach((input) => {
     const update = () => {
       state.practiceAnswers[input.dataset.practiceAnswer] = input.value;
-      if (input.type === "radio") render();
+      if (input.type === "radio") {
+        if (state.feedbackMode === "instant") {
+          const question = questionById(input.dataset.practiceAnswer);
+          state.practiceResults[question.id] = gradeQuestion(question, input.value);
+        } else {
+          delete state.practiceResults[input.dataset.practiceAnswer];
+        }
+        render();
+      }
       else saveState();
     };
     input.addEventListener(input.type === "radio" ? "change" : "input", update);
+    if (input.classList.contains("text-answer")) {
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          handleAction("check-practice");
+        }
+      });
+    }
   });
 
   document.querySelectorAll("[data-exam-answer]").forEach((input) => {
@@ -545,6 +681,26 @@ function bindEvents() {
       state.examSize = button.dataset.examSize;
       resetExamIds();
       render();
+    });
+  });
+
+  document.querySelectorAll("[data-exam-jump]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.getElementById(`exam-${button.dataset.examJump}`)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  });
+
+  document.querySelectorAll("[data-copy-code]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const code = questionById(button.dataset.copyCode)?.code || "";
+      const result = await copyText(code, document.getElementById(`code-${button.dataset.copyCode}`));
+      button.textContent = result === "copied" ? "已复制" : result === "selected" ? "已选中，按 Ctrl+C" : "复制失败";
+      window.setTimeout(() => {
+        button.textContent = "复制代码";
+      }, 2200);
     });
   });
 }

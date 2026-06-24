@@ -4,7 +4,7 @@ window.QUESTION_BANK = {
     "数据结构与算法综合练习题（2）.pdf",
     "4.教材数据结构第3版课后习题答案.pdf"
   ],
-  "total": 99,
+  "total": 104,
   "questions": [
     {
       "id": "choice-1",
@@ -1196,6 +1196,156 @@ window.QUESTION_BANK = {
       "answerSource": "已按《教材数据结构第3版课后习题答案.pdf》对应章节选择题校对。"
     },
     {
+      "id": "choice-supplement-1",
+      "number": "补1",
+      "stem": "试分析下面程序段的时间复杂度。\nfor (i=0; i<n; i++)\n    for (j=0; j<m; j++)\n        a[i][j]=0;",
+      "options": [
+        {
+          "label": "A",
+          "text": "O(m)"
+        },
+        {
+          "label": "B",
+          "text": "O(m*n)"
+        },
+        {
+          "label": "C",
+          "text": "O(n)"
+        },
+        {
+          "label": "D",
+          "text": "O(1)"
+        }
+      ],
+      "answer": "B",
+      "explanation": "内层语句共执行 n*m 次，因此时间复杂度为 O(n*m)。",
+      "source": "截图补充题（按《教材数据结构第3版课后习题答案》校对）",
+      "type": "choice",
+      "typeName": "选择题",
+      "referenceAnswer": "B. O(m*n)",
+      "answerSource": "用户截图补充；答案已按《教材数据结构第3版课后习题答案.pdf》对应题目校对。"
+    },
+    {
+      "id": "choice-supplement-2",
+      "number": "补2",
+      "stem": "试分析下面程序段的时间复杂度。\ni=1;\nwhile(i<=n)\n    i=i*3;",
+      "options": [
+        {
+          "label": "A",
+          "text": "O(log₃n)"
+        },
+        {
+          "label": "B",
+          "text": "O(n)"
+        },
+        {
+          "label": "C",
+          "text": "O(1)"
+        },
+        {
+          "label": "D",
+          "text": "O(100)"
+        }
+      ],
+      "answer": "A",
+      "explanation": "循环执行约 floor(log₃n)+1 次，因此时间复杂度为 O(log₃n)。",
+      "source": "截图补充题（按《教材数据结构第3版课后习题答案》校对）",
+      "type": "choice",
+      "typeName": "选择题",
+      "referenceAnswer": "A. O(log₃n)",
+      "answerSource": "用户截图补充；答案已按《教材数据结构第3版课后习题答案.pdf》对应题目校对。"
+    },
+    {
+      "id": "choice-supplement-3",
+      "number": "补3",
+      "stem": "试分析下面程序段的时间复杂度。\ns=0;\nfor (i=0; i<n; i++)\n    for (j=0; j<n; j++)\n        s+=B[i][j];\nsum=s;",
+      "options": [
+        {
+          "label": "A",
+          "text": "O(n²)"
+        },
+        {
+          "label": "B",
+          "text": "O(n)"
+        },
+        {
+          "label": "C",
+          "text": "O(1)"
+        },
+        {
+          "label": "D",
+          "text": "O(i*j)"
+        }
+      ],
+      "answer": "A",
+      "explanation": "双重循环各执行 n 次，核心语句共执行 n² 次。",
+      "source": "截图补充题（按《教材数据结构第3版课后习题答案》校对）",
+      "type": "choice",
+      "typeName": "选择题",
+      "referenceAnswer": "A. O(n²)",
+      "answerSource": "用户截图补充；答案已按《教材数据结构第3版课后习题答案.pdf》对应题目校对。"
+    },
+    {
+      "id": "choice-supplement-4",
+      "number": "补4",
+      "stem": "试分析下面程序段的时间复杂度。\nx=90; y=100;\nwhile(y>0)\n    if(x>100) { x=x-10; y--; }\n    else x++;",
+      "options": [
+        {
+          "label": "A",
+          "text": "O(1)"
+        },
+        {
+          "label": "B",
+          "text": "O(100)"
+        },
+        {
+          "label": "C",
+          "text": "O(2)"
+        },
+        {
+          "label": "D",
+          "text": "O(90)"
+        }
+      ],
+      "answer": "A",
+      "explanation": "x、y 的初值是常数，循环执行次数不随输入规模变化，所以为 O(1)。",
+      "source": "截图补充题（按《教材数据结构第3版课后习题答案》校对）",
+      "type": "choice",
+      "typeName": "选择题",
+      "referenceAnswer": "A. O(1)",
+      "answerSource": "用户截图补充；答案已按《教材数据结构第3版课后习题答案.pdf》对应题目校对。"
+    },
+    {
+      "id": "choice-supplement-5",
+      "number": "补5",
+      "stem": "在双向循环链表中，在 p 指针所指的结点后插入 q 所指向的新结点，其修改指针的操作是（ ）。",
+      "options": [
+        {
+          "label": "A",
+          "text": "p->next=q; q->prior=p; p->next->prior=q; q->next=q;"
+        },
+        {
+          "label": "B",
+          "text": "p->next=q; p->next->prior=q; q->prior=p; q->next=p->next;"
+        },
+        {
+          "label": "C",
+          "text": "q->prior=p; q->next=p->next; p->next->prior=q; p->next=q;"
+        },
+        {
+          "label": "D",
+          "text": "q->prior=p; q->next=p->next; p->next=q; p->next->prior=q;"
+        }
+      ],
+      "answer": "C",
+      "explanation": "必须先保存 p 的原后继并接好 q 的前驱、后继，再修改原后继的 prior，最后令 p->next=q。",
+      "source": "截图补充题（按《教材数据结构第3版课后习题答案》校对）",
+      "type": "choice",
+      "typeName": "选择题",
+      "referenceAnswer": "C. q->prior=p; q->next=p->next; p->next->prior=q; p->next=q;",
+      "answerSource": "用户截图补充；答案已按《教材数据结构第3版课后习题答案.pdf》对应题目校对。"
+    },
+    {
       "id": "blank-1",
       "source": "数据结构与算法综合练习题.pdf",
       "type": "blank",
@@ -1795,7 +1945,7 @@ window.QUESTION_BANK = {
       "typeName": "简答题",
       "number": 2,
       "stem": "已知字符集｛A，B，C，D，E，F｝，各字符出现的次数分别为｛15，36，29，58，\n13，41｝。请构造最优二叉树（哈夫曼树），并给出A、B、C、D、E、F 的哈夫曼编码方\n案。",
-      "referenceAnswer": "一种可行哈夫曼编码为：\nB=00，F=01，E=1000，A=1001，C=101，D=11。\n哈夫曼编码不唯一，只要树的合并权值正确且编码满足前缀码即可。",
+      "referenceAnswer": "一种可行哈夫曼编码为：\nB=00，F=01，D=10，C=110，E=1110，A=1111。\n哈夫曼编码不唯一，只要树的合并权值正确且编码满足前缀码即可。",
       "rubric": [
         {
           "label": "最小权值先合并",
@@ -1833,6 +1983,10 @@ window.QUESTION_BANK = {
           "any": [
             "00",
             "01",
+            "10",
+            "110",
+            "1110",
+            "1111",
             "1000",
             "1001",
             "101",
@@ -1840,7 +1994,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "diagram": "assets/diagrams/huffman-tree.png",
+      "diagramAlt": "A、B、C、D、E、F 的哈夫曼树与编码",
+      "solutionOrigin": "按教材哈夫曼树构造方法重绘"
     },
     {
       "id": "short-3",
@@ -1884,7 +2041,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "diagram": "assets/diagrams/binary-tree-traversal.png",
+      "diagramAlt": "由先序和中序序列还原的二叉树",
+      "solutionOrigin": "按遍历序列还原并绘图"
     },
     {
       "id": "short-4",
@@ -1937,7 +2097,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "diagram": "assets/diagrams/binary-search-decision-tree.png",
+      "diagramAlt": "折半查找判定树",
+      "solutionOrigin": "教材对应应用题答案图重绘"
     },
     {
       "id": "short-5",
@@ -1974,7 +2137,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "diagram": "assets/diagrams/binary-search-tree.png",
+      "diagramAlt": "按给定序列插入得到的二叉排序树",
+      "solutionOrigin": "教材对应应用题答案图重绘"
     },
     {
       "id": "short-6",
@@ -2028,7 +2194,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "diagram": "assets/diagrams/hash-table-linear-probing.png",
+      "diagramAlt": "线性探查法构造的散列表",
+      "solutionOrigin": "按教材散列表表示方法重绘"
     },
     {
       "id": "algorithm-1",
@@ -2078,7 +2247,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "codeLanguage": "cpp",
+      "solutionOrigin": "教材原题算法整理为可编译 C++",
+      "code": "struct LNode {\n    int data;\n    LNode *next;\n};\nusing LinkList = LNode*;\n\nvoid MergeList(LinkList &La, LinkList &Lb, LinkList &Lc) {\n    LNode *pa = La->next;\n    LNode *pb = Lb->next;\n    LNode *pc = La;          // 复用 La 的头结点\n    Lc = La;\n\n    while (pa && pb) {\n        if (pa->data < pb->data) {\n            pc->next = pa;\n            pc = pa;\n            pa = pa->next;\n        } else if (pa->data > pb->data) {\n            pc->next = pb;\n            pc = pb;\n            pb = pb->next;\n        } else {\n            pc->next = pa;   // 相等时保留 La 中的结点\n            pc = pa;\n            pa = pa->next;\n\n            LNode *duplicate = pb;\n            pb = pb->next;\n            delete duplicate;\n        }\n    }\n\n    pc->next = pa ? pa : pb;\n    delete Lb;               // 释放 Lb 的头结点\n    Lb = nullptr;\n}"
     },
     {
       "id": "algorithm-2",
@@ -2127,7 +2299,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "codeLanguage": "cpp",
+      "solutionOrigin": "补充标准解（教材答案中无完全相同题目）",
+      "code": "#include <algorithm>\n#include <array>\n#include <string>\n\nint lengthOfLongestSubstring(const std::string &s) {\n    std::array<int, 256> last;\n    last.fill(-1);\n\n    int left = 0;\n    int answer = 0;\n    for (int right = 0; right < static_cast<int>(s.size()); ++right) {\n        unsigned char ch = static_cast<unsigned char>(s[right]);\n        left = std::max(left, last[ch] + 1);\n        last[ch] = right;\n        answer = std::max(answer, right - left + 1);\n    }\n    return answer;\n}"
     },
     {
       "id": "algorithm-3",
@@ -2174,7 +2349,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "codeLanguage": "cpp",
+      "solutionOrigin": "按教材栈的应用算法改写",
+      "code": "#include <iostream>\n#include <stack>\n\nvoid printBinary(unsigned int n) {\n    if (n == 0) {\n        std::cout << 0;\n        return;\n    }\n\n    std::stack<int> bits;\n    while (n > 0) {\n        bits.push(n % 2);\n        n /= 2;\n    }\n\n    while (!bits.empty()) {\n        std::cout << bits.top();\n        bits.pop();\n    }\n}"
     },
     {
       "id": "algorithm-4",
@@ -2223,7 +2401,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "codeLanguage": "cpp",
+      "solutionOrigin": "按教材括号配对与栈算法改写",
+      "code": "#include <stack>\n#include <string>\n\nbool isValidBrackets(const std::string &s) {\n    std::stack<char> st;\n\n    for (char ch : s) {\n        if (ch == '(' || ch == '[' || ch == '{') {\n            st.push(ch);\n            continue;\n        }\n\n        if (st.empty()) return false;\n        char left = st.top();\n        st.pop();\n\n        bool matched =\n            (left == '(' && ch == ')') ||\n            (left == '[' && ch == ']') ||\n            (left == '{' && ch == '}');\n        if (!matched) return false;\n    }\n    return st.empty();\n}"
     },
     {
       "id": "algorithm-5",
@@ -2261,7 +2442,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "codeLanguage": "cpp",
+      "solutionOrigin": "按教材直接插入排序方法改写",
+      "code": "#include <vector>\n\nvoid insertionSort(std::vector<int> &arr) {\n    for (int i = 1; i < static_cast<int>(arr.size()); ++i) {\n        int key = arr[i];\n        int j = i - 1;\n\n        while (j >= 0 && arr[j] > key) {\n            arr[j + 1] = arr[j];\n            --j;\n        }\n        arr[j + 1] = key;\n    }\n}\n\n// {2, 6, 8, 1, 4, 5} -> {1, 2, 4, 5, 6, 8}"
     },
     {
       "id": "algorithm-6",
@@ -2300,7 +2484,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "codeLanguage": "cpp",
+      "solutionOrigin": "按教材冒泡排序方法改写",
+      "code": "#include <utility>\n#include <vector>\n\nvoid bubbleSort(std::vector<int> &arr) {\n    for (int end = static_cast<int>(arr.size()) - 1; end > 0; --end) {\n        bool swapped = false;\n        for (int i = 0; i < end; ++i) {\n            if (arr[i] > arr[i + 1]) {\n                std::swap(arr[i], arr[i + 1]);\n                swapped = true;\n            }\n        }\n        if (!swapped) break;\n    }\n}\n\n// {20, 16, 49, 16, 30} -> {16, 16, 20, 30, 49}"
     },
     {
       "id": "algorithm-7",
@@ -2340,7 +2527,10 @@ window.QUESTION_BANK = {
           ]
         }
       ],
-      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。"
+      "answerSource": "参考《教材数据结构第3版课后习题答案.pdf》对应章节，并对综合题按关键词评分。",
+      "codeLanguage": "cpp",
+      "solutionOrigin": "按教材快速排序方法改写",
+      "code": "#include <utility>\n#include <vector>\n\nint partition(std::vector<int> &arr, int low, int high) {\n    int pivot = arr[low];\n    while (low < high) {\n        while (low < high && arr[high] >= pivot) --high;\n        arr[low] = arr[high];\n        while (low < high && arr[low] <= pivot) ++low;\n        arr[high] = arr[low];\n    }\n    arr[low] = pivot;\n    return low;\n}\n\nvoid quickSort(std::vector<int> &arr, int low, int high) {\n    if (low >= high) return;\n    int pivotIndex = partition(arr, low, high);\n    quickSort(arr, low, pivotIndex - 1);\n    quickSort(arr, pivotIndex + 1, high);\n}\n\n// quickSort(arr, 0, arr.size() - 1);\n// {20, 16, 49, 16, 30} -> {16, 16, 20, 30, 49}"
     }
   ]
 };
